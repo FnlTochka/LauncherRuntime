@@ -7,7 +7,6 @@
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ContextMenu?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.effect.Blend?>
 <?import javafx.scene.image.Image?>
@@ -22,7 +21,7 @@
 
 <!-- DrLeonardo refactor -->
 
-<Pane fx:id="loginPane" prefHeight="500.0" prefWidth="900.0" styleClass="transparent" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+<Pane fx:id="loginPane" prefHeight="500.0" prefWidth="900.0" styleClass="transparent" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1">
      <Pane fx:id="layout" prefHeight="500.0" prefWidth="900.0" styleClass="transparent">
 
          <!-- Вертикальная полоса -->
@@ -35,7 +34,7 @@
                        <Insets left="5.0" />
                    </padding>
                </CheckBox>
-               <CheckBox id="savePassword" layoutX="14.0" layoutY="468.0" prefHeight="18.0" prefWidth="128.0" text="%runtime.scenes.login.savePassword" wrapText="true">
+               <CheckBox id="savePassword" layoutX="14.0" layoutY="468.0" prefHeight="18.0" prefWidth="128.0" selected="true" text="%runtime.scenes.login.savePassword" wrapText="true">
                    <padding>
                        <Insets left="5.0" />
                    </padding>
@@ -74,7 +73,7 @@
       </Pane>
 
          <!-- Способы авторизации -->
-         <VBox alignment="BOTTOM_LEFT"  layoutX="728.0" layoutY="159.0" prefHeight="339.0" prefWidth="167.0">
+         <VBox alignment="BOTTOM_LEFT" layoutX="728.0" layoutY="159.0" prefHeight="339.0" prefWidth="167.0">
              <VBox id="authList">
                  <opaqueInsets>
                      <Insets />
@@ -101,13 +100,13 @@
                <children>
 
                    <!-- Ссылки -->
-                  <Pane id="links" layoutX="311.0" layoutY="34.0" prefHeight="32.0" prefWidth="196.0">
+                  <Pane id="links" layoutX="311.0" layoutY="34.0" prefHeight="32.0" prefWidth="196.0" visible="false">
                      <children>
                         <Rectangle height="28.0" layoutX="72.0" layoutY="2.0" strokeType="INSIDE" styleClass="rectangle" width="1.0" x="0.5" />
                         <Text id="forgotPass" layoutY="13.0" styleClass="forgotPass" text="%runtime.scenes.login.forgotPass" textAlignment="RIGHT" wrappingWidth="65.0" />
                      </children>
                   </Pane>
-                   <FlowPane id="registerPane" layoutX="395.0" layoutY="37.0" prefHeight="32.0" prefWidth="115.0">
+                   <FlowPane id="registerPane" disable="true" layoutX="395.0" layoutY="37.0" prefHeight="32.0" prefWidth="115.0" visible="false">
                        <children>
                            <Text styleClass="textLogin" text="%runtime.scenes.login.textLogin" />
                            <Text id="createAccount" styleClass="createAccount-text" text="%runtime.scenes.login.createAccount" />

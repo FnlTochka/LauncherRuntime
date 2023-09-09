@@ -9,12 +9,19 @@ import pro.gravit.launcher.client.gui.JavaFXApplication;
 import pro.gravit.launcher.client.gui.helper.LookupHelper;
 import pro.gravit.launcher.client.gui.overlays.AbstractOverlay;
 import pro.gravit.launcher.client.gui.scenes.login.LoginScene;
+import pro.gravit.launcher.client.gui.utils.URLOpen;
 import pro.gravit.launcher.request.auth.details.AuthWebViewDetails;
 import pro.gravit.launcher.request.auth.password.AuthCodePassword;
 import pro.gravit.utils.helper.LogHelper;
 
+import java.awt.Desktop;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
+
+import static pro.gravit.launcher.client.gui.utils.URLOpen.browse;
 
 public class WebAuthMethod extends AbstractAuthMethod<AuthWebViewDetails> {
     WebAuthOverlay overlay;
@@ -52,15 +59,20 @@ public class WebAuthMethod extends AbstractAuthMethod<AuthWebViewDetails> {
     @Override
     public CompletableFuture<LoginScene.LoginAndPasswordResult> auth(AuthWebViewDetails details) {
         overlay.future = new CompletableFuture<>();
-        overlay.follow(details.url, details.redirectUrl, (r) -> {
-            String code = r;
-            LogHelper.debug("Code: %s", code);
-            if(code.startsWith("?code=")) {
-                code = r.substring("?code=".length(), r.indexOf("&"));
-            }
-            LogHelper.debug("Code: %s", code);
-            overlay.future.complete(new LoginScene.LoginAndPasswordResult(null, new AuthCodePassword(code)));
-        });
+        if (details.onlyBrowser) {
+            browse(details.url);
+            overlay.disable();
+        } else {
+            overlay.follow(details.url, details.redirectUrl, (r) -> {
+                String code = r;
+                LogHelper.debug("Code: %s", code);
+                if(code.startsWith("?code=")) {
+                    code = r.substring("?code=".length(), r.indexOf("&"));
+                }
+                LogHelper.debug("Code: %s", code);
+                overlay.future.complete(new LoginScene.LoginAndPasswordResult(null, new AuthCodePassword(code)));
+            });
+        }
         return overlay.future;
     }
 

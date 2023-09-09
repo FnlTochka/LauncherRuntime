@@ -8,6 +8,7 @@ import pro.gravit.launcher.client.gui.scenes.serverinfo.ServerInfoScene;
 import pro.gravit.launcher.client.gui.scenes.servermenu.ServerMenuScene;
 import pro.gravit.launcher.client.gui.scenes.settings.SettingsScene;
 import pro.gravit.launcher.events.RequestEvent;
+import pro.gravit.launcher.events.request.AdditionalDataRequestEvent;
 import pro.gravit.launcher.events.request.AuthRequestEvent;
 import pro.gravit.launcher.events.request.ProfilesRequestEvent;
 import pro.gravit.launcher.profiles.ClientProfile;
@@ -17,6 +18,8 @@ import pro.gravit.launcher.request.websockets.ClientWebSocketService;
 import pro.gravit.utils.helper.LogHelper;
 
 import java.util.UUID;
+
+import java.util.Map;
 
 public class GuiEventHandler implements RequestService.EventHandler {
     private final JavaFXApplication application;
@@ -35,11 +38,22 @@ public class GuiEventHandler implements RequestService.EventHandler {
         try {
             if (event instanceof AuthRequestEvent) {
                 boolean isNextScene = application.getCurrentScene() instanceof LoginScene;
+                AuthRequestEvent rawAuthResult = (AuthRequestEvent) event;
                 ((LoginScene) application.getCurrentScene()).isLoginStarted = true;
                 LogHelper.dev("Receive auth event. Send next scene %s", isNextScene ? "true" : "false");
-                application.stateService.setAuthResult(null, (AuthRequestEvent) event);
-                if (isNextScene && ((LoginScene) application.getCurrentScene()).isLoginStarted)
+                application.stateService.setAuthResult(null, rawAuthResult);
+                if (isNextScene && ((LoginScene) application.getCurrentScene()).isLoginStarted) {
                     ((LoginScene) application.getCurrentScene()).onGetProfiles();
+
+                    if (((LoginScene) application.getCurrentScene()).getSavePasswordCheckBoxSelected()) {
+                        application.runtimeSettings.login = rawAuthResult.playerProfile.username;
+                        application.runtimeSettings.oauthAccessToken = rawAuthResult.oauth.accessToken;
+                        application.runtimeSettings.oauthRefreshToken = rawAuthResult.oauth.refreshToken;
+                        application.runtimeSettings.oauthExpire = System.currentTimeMillis() + rawAuthResult.oauth.expire;
+                        application.runtimeSettings.lastAuth = ((LoginScene) application.getCurrentScene()).getAuthAvailability();
+                    }
+                }
+
             }
             if(event instanceof ProfilesRequestEvent) {
                 application.stateService.setProfilesResult((ProfilesRequestEvent) event);

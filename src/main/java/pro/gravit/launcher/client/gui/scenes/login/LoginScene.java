@@ -168,6 +168,15 @@ public class LoginScene extends AbstractScene {
         LogHelper.info("Selected auth: %s", authAvailability.name);
     }
 
+    public GetAvailabilityAuthRequestEvent.AuthAvailability getAuthAvailability() {
+        return this.authAvailability;
+    }
+
+    public boolean getSavePasswordCheckBoxSelected() {
+        CheckBox checkBox = this.savePasswordCheckBox;
+        return checkBox != null && checkBox.isSelected();
+    }
+
     public void addAuthAvailability(GetAvailabilityAuthRequestEvent.AuthAvailability authAvailability) {
         RadioButton radio = new RadioButton();
         radio.setToggleGroup(authToggleGroup);
